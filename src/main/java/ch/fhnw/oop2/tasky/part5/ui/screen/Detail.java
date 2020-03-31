@@ -72,7 +72,10 @@ final class Detail extends GridPane {
 		initializeControls();
 		layoutControls();
 	}
-	
+
+	/**
+	 * Erzeugt alle control elemente
+	 */
 	private void initializeControls() {
 		labelId = new Label("ID");
 		labelTitle = new Label("Title");
@@ -101,9 +104,14 @@ final class Detail extends GridPane {
 		buttonDelete = new Button("Delete");
 
 		buttonNew.setOnAction(event -> saveTask());
-		buttonDelete.setOnAction(event -> deleteTask());
+		buttonDelete.setOnAction(event -> cleanUp());
+		buttonNew.setDisable(true);
+		buttonDelete.setDisable(true);
 	}
-	
+
+	/**
+	 * Erzeugt das ganze layout (gegeben)
+	 */
 	private void layoutControls() {
 		setPadding(new Insets(22, 30, 22, 30));
 		
@@ -140,10 +148,16 @@ final class Detail extends GridPane {
 		GridPane.setMargin(buttons, new Insets(20, 0, 0, 0));
 	}
 
+	/**
+	 * Gibt das ID Property zurueck, wie in AB 04.
+	 */
 	public LongProperty getTaskIdProperty() {
 		return id;
 	}
 
+	/**
+	 * Speichert die eingegeben Infos als Task temporär ab und gibt die weiter ans AppGui
+	 */
 	public void saveTask(){
 		TaskData taskdata = new TaskData(title.get(), desc.get(), date.get(), state.get());
 		Task tmp = new Task(id.get(), taskdata);
@@ -151,8 +165,35 @@ final class Detail extends GridPane {
 		gui.updateTask(tmp);
 	}
 
-	public void deleteTask(){
+	/**
+	 * Leert das Form mit eingegebenen Informationen
+	 */
+	public void cleanUp(){
+		if (id.get() != 0 ){
+			gui.deleteTask(id.get());
+		}
+		title.set("");
+		desc.set("");
+		date.set(null);
+		state.set(null);
 
+		buttonNew.setDisable(true);
+		buttonDelete.setDisable(true);
 	}
 
+	/**
+	 * Hook fuer nach dem Klick auf "New".
+	 * Hier kann init, cleanup, button disable eingefuegt werden.
+	 * */
+	public void setUp() {
+		// setup Form (again)
+		title.set("");
+		desc.set("");
+		date.set(LocalDate.now()); // Localdate
+		state.set(Status.Todo); // Status
+
+		// activate buttons
+		buttonNew.setDisable(false);
+		buttonDelete.setDisable(false);
+	}
 }

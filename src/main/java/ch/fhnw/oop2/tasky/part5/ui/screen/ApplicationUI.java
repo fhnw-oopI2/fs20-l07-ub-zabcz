@@ -32,16 +32,10 @@ public final class ApplicationUI extends GridPane {
 	private Lane review;
 
 	private Repository repo;
-	private List<Task> all_tasks;
-	private List<Task> todo_tasks;
-	private List<Task> doing_tasks;
-	private List<Task> done_tasks;
-	private List<Task> review_tasks;
+	private Detail detailView;
 
 	private final LongProperty taskSelected;
 	private LaneGroup laneGroup;
-
-
 
 	/**
 	 * Erzeugt einen neuen MainScreen.
@@ -65,13 +59,13 @@ public final class ApplicationUI extends GridPane {
 	 */
 	private void refreshTaskLanes() {
 		// create private list of all tasks from repo
-		all_tasks = repo.read();
+		List<Task> all_tasks = repo.read();
 
 		// create lists for each state
-		todo_tasks = Task.reduceList(all_tasks, Status.Todo);
-		doing_tasks = Task.reduceList(all_tasks, Status.Doing);
-		done_tasks = Task.reduceList(all_tasks, Status.Done);
-		review_tasks = Task.reduceList(all_tasks, Status.Review);
+		List<Task> todo_tasks = Task.reduceList(all_tasks, Status.Todo);
+		List<Task> doing_tasks = Task.reduceList(all_tasks, Status.Doing);
+		List<Task> done_tasks = Task.reduceList(all_tasks, Status.Done);
+		List<Task> review_tasks = Task.reduceList(all_tasks, Status.Review);
 
 		// create lanes with one region for each task
 		todo = new Lane (Status.Todo.name(), createRegionsForTasks(todo_tasks, COLORS[Status.Todo.ordinal()]));
@@ -93,7 +87,7 @@ public final class ApplicationUI extends GridPane {
 		
 		ConstraintHelper.setColumnPercentConstraint(this, DETAILS_PERCENT);
 
-		Detail detailView = new Detail(this);
+		detailView = new Detail(this);
 		add(detailView, 1, 0);
 
 		// Sync property of task id
@@ -116,6 +110,7 @@ public final class ApplicationUI extends GridPane {
 		System.out.println(taskSelected.toString());
 		refreshTaskLanes();
 		System.out.println("create");
+		detailView.setUp();
 	}
 
 	public void showTaskInDetail() {
@@ -123,7 +118,20 @@ public final class ApplicationUI extends GridPane {
 		System.out.println("refresh");
 	}
 
+	/**
+	 * Speichert den eingegebenen Task im repository
+	 */
 	public void updateTask(Task tmp) {
 		repo.update(tmp);
+		refreshTaskLanes();
 	}
+
+	/**
+	 * Löscht den neu erstellten Task aus dem repo
+	 */
+	public void deleteTask(long task_id) {
+		repo.delete(task_id);
+		refreshTaskLanes();
+	}
+
 }
