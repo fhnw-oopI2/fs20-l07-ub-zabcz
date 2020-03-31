@@ -1,7 +1,14 @@
 package ch.fhnw.oop2.tasky.part5.ui.screen;
 
+import ch.fhnw.oop2.tasky.part1.model.Status;
+import ch.fhnw.oop2.tasky.part1.model.Task;
+import ch.fhnw.oop2.tasky.part1.model.TaskData;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -11,9 +18,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 
 import java.lang.invoke.StringConcatFactory;
+import java.time.LocalDate;
 
 /**
  * Diese Klasse sorgt dafür, dass alle Controls für die Detailansicht 
@@ -26,6 +35,8 @@ import java.lang.invoke.StringConcatFactory;
  */
 final class Detail extends GridPane {
 
+	private ApplicationUI gui;
+
 	private Label labelId;
 	private Label labelTitle;
 	private Label labelDescription;
@@ -37,19 +48,29 @@ final class Detail extends GridPane {
 	private TextArea descriptionField;
 	
 	private DatePicker datePicker;
-	private ComboBox<String> stateDropDown;
+	private ComboBox<Status> stateDropDown;
 	
 	private Button save;
 	private Button delete;
 
 	private final LongProperty id;
+	private final StringProperty desc;
+	private final StringProperty title;
+	private final ObjectProperty<LocalDate> date;
+	private final ObjectProperty<Status> state;
+
 
 	
 	/**
 	 * Erzeugt eine neue Detailansicht.
 	 */
-	Detail() {
+	Detail(ApplicationUI gui) {
+		this.gui = gui;
 		id = new SimpleLongProperty();
+		desc = new SimpleStringProperty();
+		title = new SimpleStringProperty();
+		date = new SimpleObjectProperty<>(LocalDate.now()); // Localdate
+		state = new SimpleObjectProperty<>(Status.Todo); // Status
 		initializeControls();
 		layoutControls();
 	}
@@ -63,14 +84,20 @@ final class Detail extends GridPane {
 
 		idField = new TextField();
 		idField.setDisable(true);
-		idField.textProperty().bindBidirectional(id, new NumberStringConverter()); //bing to AppUI
+		// bind to AppUI
+		idField.textProperty().bindBidirectional(id, new NumberStringConverter());
 		idField.textProperty().bindBidirectional(id, new NumberStringConverter());
 
 		titleField = new TextField();
+		titleField.textProperty().bindBidirectional(title); // String to String - no Converter
 		descriptionField = new TextArea();
+		descriptionField.textProperty().bindBidirectional(desc); // String to String - no Converter
 
 		datePicker = new DatePicker();
+		datePicker.valueProperty().bindBidirectional(date); // value property wie bei slider
 		stateDropDown = new ComboBox<>();
+		stateDropDown.getItems().addAll(Status.getAllStati());
+		stateDropDown.valueProperty().bindBidirectional(state); // value property wie bei slider
 		
 		save = new Button("Save");
 		delete = new Button("Delete");
@@ -114,6 +141,16 @@ final class Detail extends GridPane {
 
 	public LongProperty getTaskIdProperty() {
 		return id;
+	}
+
+	public void saveTask(){
+		TaskData taskdata = new TaskData(title.get(), desc.get(), date.get(), state.get());
+		Task tmp = new Task(id.get(), taskdata);
+		gui.newTask();
+	}
+
+	public void deleteTask(){
+
 	}
 
 }

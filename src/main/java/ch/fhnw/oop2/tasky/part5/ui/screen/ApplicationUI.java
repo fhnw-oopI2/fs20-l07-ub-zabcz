@@ -93,7 +93,7 @@ public final class ApplicationUI extends GridPane {
 		
 		ConstraintHelper.setColumnPercentConstraint(this, DETAILS_PERCENT);
 
-		Detail detailView = new Detail();
+		Detail detailView = new Detail(this);
 		add(detailView, 1, 0);
 
 		// Sync property of task id
