@@ -18,8 +18,8 @@ final class LaneGroup extends GridPane {
 	private static double BOTTOM_HEIGHT_PERCENT = 10.0;
 	private static double LANE_HEIGHT_PERCENT = ONE_HUNDRED_PERCENT - BOTTOM_HEIGHT_PERCENT;
 	
-	private Button create;
-	private Button refresh;
+	private Button btnCreate;
+	private Button btnRefresh;
 	
 
 	/**
@@ -27,14 +27,18 @@ final class LaneGroup extends GridPane {
 	 * 
 	 * @param lanes Die Lanes in der Gruppe
 	 */
-	LaneGroup(Lane... lanes) {
-		initializeControls();
+	LaneGroup(ApplicationUI gui, Lane... lanes) {
+		initializeControls(gui);
 		layoutControls(lanes);
 	}
 	
-	private void initializeControls() {
-		create = new Button("New");
-		refresh = new Button("Refresh");
+	private void initializeControls(ApplicationUI gui) {
+		btnCreate = new Button("New");
+		btnRefresh = new Button("Refresh");
+
+		// set actoin on button click
+		btnCreate.setOnAction(event -> gui.newTask());
+		btnRefresh.setOnAction(event -> gui.showTaskInDetail());
 	}
 	
 	private void layoutControls(Lane... lanes) {
@@ -50,7 +54,7 @@ final class LaneGroup extends GridPane {
 		
 		HBox buttons = new HBox();
 		buttons.setSpacing(10);
-		buttons.getChildren().addAll(create, refresh);
+		buttons.getChildren().addAll(btnCreate, btnRefresh);
 		add(buttons, 0, 1, lanes.length, 1);
 		GridPane.setMargin(buttons, new Insets(7, 0, 5, 10));
 	}

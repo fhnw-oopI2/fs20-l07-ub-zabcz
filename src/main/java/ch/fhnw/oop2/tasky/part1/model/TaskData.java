@@ -8,14 +8,9 @@ import java.time.LocalDate;
  *
  */
 public class TaskData {
-	
-	/**
-	 * Die Zustände, welche eine Task haben kann.
-	 */
-	public enum State { Todo, Doing, Done, Review };
-	
+
 	public final LocalDate dueDate;
-	public final State state;
+	public final Status state;
 	public final String title;
 	public final String desc;
 	
@@ -27,7 +22,7 @@ public class TaskData {
 	 * @param dueDate  Das Datum an dem die Task erledigt sein soll
 	 * @param state  Der Zustand der Task
 	 */
-	public TaskData(String title, String desc, LocalDate dueDate, State state) {
+	public TaskData(String title, String desc, LocalDate dueDate, Status state) {
 		this.dueDate = dueDate;
 		this.state = state;
 		this.title = title;
@@ -78,6 +73,5 @@ public class TaskData {
             return false;
         return true;
     }
-	
-	
+
 }

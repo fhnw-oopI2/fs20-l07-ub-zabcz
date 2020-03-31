@@ -1,5 +1,12 @@
 package ch.fhnw.oop2.tasky.part1.model;
 
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Diese Klasse implementiert eine Task. Eine Task besteht aus der ID und den Daten.
  * 
@@ -54,6 +61,34 @@ public class Task {
         if (id != other.id)
             return false;
         return true;
+    }
+
+    public static List<Task> reduceList(List<Task> tasks, Status state){
+        List<Task> reduced_tasks = new ArrayList<>();
+
+	    for (Task t : tasks) {
+            if(t.data.state == state) {
+                reduced_tasks.add(t);
+            }
+        }
+	    return reduced_tasks;
+    }
+
+    /**
+     * Erzeugt eine neue Region (hier ein Label).
+     *
+     * @param color Color als Hex-String
+     * @param label Text, welcher auf die Region geschrieben wird
+     * @return  Die neue Region
+     */
+    public static Region createRegionWithText(String color, String label) {
+        final Label labelTask = new Label();
+        labelTask.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        labelTask.setPadding(new Insets(10));
+        labelTask.setStyle("-fx-background-color: " +color + ";");
+        labelTask.setOpacity(0.9);
+        labelTask.setText(label);
+        return labelTask;
     }
 	
 	
