@@ -18,10 +18,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 
-import java.lang.invoke.StringConcatFactory;
 import java.time.LocalDate;
 
 /**
@@ -50,8 +48,8 @@ final class Detail extends GridPane {
 	private DatePicker datePicker;
 	private ComboBox<Status> stateDropDown;
 	
-	private Button save;
-	private Button delete;
+	private Button buttonNew;
+	private Button buttonDelete;
 
 	private final LongProperty id;
 	private final StringProperty desc;
@@ -99,8 +97,11 @@ final class Detail extends GridPane {
 		stateDropDown.getItems().addAll(Status.getAllStati());
 		stateDropDown.valueProperty().bindBidirectional(state); // value property wie bei slider
 		
-		save = new Button("Save");
-		delete = new Button("Delete");
+		buttonNew = new Button("Save");
+		buttonDelete = new Button("Delete");
+
+		buttonNew.setOnAction(event -> saveTask());
+		buttonDelete.setOnAction(event -> deleteTask());
 	}
 	
 	private void layoutControls() {
@@ -134,7 +135,7 @@ final class Detail extends GridPane {
 		// Buttons werden als HBox mit Colspan hinzugefügt.
 		HBox buttons = new HBox();
 		buttons.setSpacing(10);
-		buttons.getChildren().addAll(save, delete);
+		buttons.getChildren().addAll(buttonNew, buttonDelete);
 		add(buttons, 0, 5, 2, 1);
 		GridPane.setMargin(buttons, new Insets(20, 0, 0, 0));
 	}
@@ -146,7 +147,8 @@ final class Detail extends GridPane {
 	public void saveTask(){
 		TaskData taskdata = new TaskData(title.get(), desc.get(), date.get(), state.get());
 		Task tmp = new Task(id.get(), taskdata);
-		gui.newTask();
+		System.out.println("detail: " + taskdata.toString());
+		gui.updateTask(tmp);
 	}
 
 	public void deleteTask(){

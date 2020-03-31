@@ -110,6 +110,7 @@ public final class ApplicationUI extends GridPane {
 	}
 
 	public void newTask() {
+		System.out.println(this.getClass() + "newTask()");
 		Task task = repo.create(new TaskData("", "", LocalDate.now(), Status.Todo));
 		taskSelected.set(task.id);
 		System.out.println(taskSelected.toString());
@@ -122,6 +123,7 @@ public final class ApplicationUI extends GridPane {
 		System.out.println("refresh");
 	}
 
-
-
+	public void updateTask(Task tmp) {
+		repo.update(tmp);
+	}
 }
