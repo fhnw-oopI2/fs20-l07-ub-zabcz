@@ -104,7 +104,7 @@ final class Detail extends GridPane {
 		buttonDelete = new Button("Delete");
 
 		buttonNew.setOnAction(event -> saveTask());
-		buttonDelete.setOnAction(event -> cleanUp());
+		buttonDelete.setOnAction(event -> deleteTask());
 		buttonNew.setDisable(true);
 		buttonDelete.setDisable(true);
 	}
@@ -163,15 +163,13 @@ final class Detail extends GridPane {
 		Task tmp = new Task(id.get(), taskdata);
 		System.out.println("detail: " + taskdata.toString());
 		gui.updateTask(tmp);
+		cleanUp();
 	}
 
 	/**
 	 * Leert das Form mit eingegebenen Informationen
 	 */
 	public void cleanUp(){
-		if (id.get() != 0 ){
-			gui.deleteTask(id.get());
-		}
 		title.set("");
 		desc.set("");
 		date.set(null);
@@ -186,7 +184,7 @@ final class Detail extends GridPane {
 	 * Hier kann init, cleanup, button disable eingefuegt werden.
 	 * */
 	public void setUp() {
-		// setup Form (again)
+		// setup Form
 		title.set("");
 		desc.set("");
 		date.set(LocalDate.now()); // Localdate
@@ -195,5 +193,15 @@ final class Detail extends GridPane {
 		// activate buttons
 		buttonNew.setDisable(false);
 		buttonDelete.setDisable(false);
+	}
+
+	/**
+	 * Loescht den Task im aktuellen Form und leert das Form
+	 */
+	public void deleteTask(){
+		if (id.get() != 0 ){
+			gui.deleteTask(id.get());
+		}
+		cleanUp();
 	}
 }

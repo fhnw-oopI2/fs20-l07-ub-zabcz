@@ -67,11 +67,19 @@ public final class ApplicationUI extends GridPane {
 		List<Task> done_tasks = Task.reduceList(all_tasks, Status.Done);
 		List<Task> review_tasks = Task.reduceList(all_tasks, Status.Review);
 
-		// create lanes with one region for each task
-		todo = new Lane (Status.Todo.name(), createRegionsForTasks(todo_tasks, COLORS[Status.Todo.ordinal()]));
-		doing = new Lane (Status.Doing.name(), createRegionsForTasks(doing_tasks, COLORS[Status.Doing.ordinal()]));
-		done = new Lane (Status.Done.name(), createRegionsForTasks(done_tasks, COLORS[Status.Done.ordinal()]));
-		review = new Lane (Status.Review.name(), createRegionsForTasks(review_tasks, COLORS[Status.Review.ordinal()]));
+		// create regions for every task in its specific state
+		List<Region> todo_regions = createRegionsForTasks(todo_tasks, COLORS[Status.Todo.ordinal()]);
+		List<Region> doing_regions = createRegionsForTasks(doing_tasks, COLORS[Status.Doing.ordinal()]);
+		List<Region> done_regions = createRegionsForTasks(done_tasks, COLORS[Status.Done.ordinal()]);
+		List<Region> review_regions = createRegionsForTasks(review_tasks, COLORS[Status.Review.ordinal()]);
+
+		// create lanes for each list of region
+		todo = new Lane (Status.Todo.name(), todo_regions);
+		doing = new Lane (Status.Doing.name(), doing_regions);
+		done = new Lane (Status.Done.name(), done_regions);
+		review = new Lane (Status.Review.name(), review_regions);
+
+
 
 		laneGroup = new LaneGroup(this, todo, doing, done, review);
 		add(laneGroup, 0, 0);
@@ -98,7 +106,13 @@ public final class ApplicationUI extends GridPane {
 		List<Region> tasks_as_region = new ArrayList<>();
 
 		for (Task t : tasks) {
-			tasks_as_region.add(Task.createRegionWithText(color, t.data.title));
+			// create region with color and title
+			Region region = Task.createRegionWithText(color, t.data.title);
+			// create click handler on every region
+			System.out.println("onMouseClick: set id");
+			region.onMouseClickedProperty().set(event -> System.out.println("test") );//taskSelected.set(t.id));
+			// add region to list of regions
+			tasks_as_region.add(region);
 		}
 		return tasks_as_region;
 	}

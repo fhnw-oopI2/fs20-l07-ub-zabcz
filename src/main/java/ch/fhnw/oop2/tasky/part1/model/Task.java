@@ -15,8 +15,9 @@ import java.util.List;
  * 
  */
 public class Task {
-	
-	public final long id;
+
+    private static final String HOVER_COLOR = "#c4d5c4";
+    public final long id;
 	public final TaskData data;
 	
 	/**
@@ -86,8 +87,15 @@ public class Task {
         labelTask.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
         labelTask.setPadding(new Insets(10));
         labelTask.setStyle("-fx-background-color: " +color + ";");
-        labelTask.setOpacity(0.9);
+        //labelTask.setOpacity(0.9);
         labelTask.setText(label);
+
+        // Effekt: wenn mit Maus drüber fahrt, Button Effekt schaffen
+        labelTask.onMouseEnteredProperty().set(event -> labelTask.setStyle("-fx-background-color: " +HOVER_COLOR + ";"));
+        labelTask.onMouseExitedProperty().set(event -> labelTask.setStyle("-fx-background-color: " +color + ";"));
+
+       //
+
         return labelTask;
     }
 	
