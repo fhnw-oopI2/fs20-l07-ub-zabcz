@@ -50,5 +50,14 @@ public interface Repository {
 	 * @param id  Die ID
 	 */
 	void delete(long id);
+
+	/**
+	 * Gibt einen Task zurueck. Der Versuch eine nicht existierende
+	 * Task zu suchen, führt zu einer IllegalStateException.
+	 *
+	 * @param id  Die ID
+	 * @return Task
+	 */
+	Task getTaskById(long id);
 }
 

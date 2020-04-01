@@ -94,8 +94,6 @@ public class Task {
         labelTask.onMouseEnteredProperty().set(event -> labelTask.setStyle("-fx-background-color: " +HOVER_COLOR + ";"));
         labelTask.onMouseExitedProperty().set(event -> labelTask.setStyle("-fx-background-color: " +color + ";"));
 
-       //
-
         return labelTask;
     }
 	

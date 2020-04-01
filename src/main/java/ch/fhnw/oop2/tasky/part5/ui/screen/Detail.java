@@ -9,6 +9,8 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -65,12 +67,29 @@ final class Detail extends GridPane {
 	Detail(ApplicationUI gui) {
 		this.gui = gui;
 		id = new SimpleLongProperty();
+		initListener(id);
 		desc = new SimpleStringProperty();
 		title = new SimpleStringProperty();
 		date = new SimpleObjectProperty<>(LocalDate.now()); // Localdate
 		state = new SimpleObjectProperty<>(Status.Todo); // Status
 		initializeControls();
 		layoutControls();
+	}
+
+	/**
+	 * implement functional interface "ChangeListener"
+	 */
+	private void initListener(LongProperty id) {
+		id.addListener(new ChangeListener(){
+			// if id changes, lookup other fileds
+			@Override public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+				Task temp = gui.getRepo().getTaskById(id.get());
+				title.set(temp.data.title);
+				desc.set(temp.data.desc);
+				date.set(temp.data.dueDate);
+				state.set(temp.data.state);
+			}
+		});
 	}
 
 	/**

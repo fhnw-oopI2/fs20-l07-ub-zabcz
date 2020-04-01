@@ -34,6 +34,7 @@ public final class ApplicationUI extends GridPane {
 	private Repository repo;
 	private Detail detailView;
 
+
 	private final LongProperty taskSelected;
 	private LaneGroup laneGroup;
 
@@ -144,6 +145,10 @@ public final class ApplicationUI extends GridPane {
 	public void deleteTask(long task_id) {
 		repo.delete(task_id);
 		refreshTaskLanes();
+	}
+
+	public Repository getRepo() {
+		return repo;
 	}
 
 }
