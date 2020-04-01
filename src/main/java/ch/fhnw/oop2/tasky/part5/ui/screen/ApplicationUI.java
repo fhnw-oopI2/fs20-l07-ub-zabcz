@@ -108,8 +108,7 @@ public final class ApplicationUI extends GridPane {
 			// create region with color and title
 			Region region = Task.createRegionWithText(color, t.data.title);
 			// create click handler on every region
-			System.out.println("onMouseClick: set id");
-			region.onMouseClickedProperty().set(event -> taskSelected.set(t.id)); //taskSelected.set(t.id));
+			region.onMouseClickedProperty().set(event -> mouseClickAction(t.id)); //taskSelected.set(t.id));
 			// add region to list of regions
 			tasks_as_region.add(region);
 		}
@@ -147,8 +146,16 @@ public final class ApplicationUI extends GridPane {
 		refreshTaskLanes();
 	}
 
+	/**
+	 * Handles Mouse click on Region
+	 */
+	public void mouseClickAction(Long id) {
+		//System.out.println("mouse click fired");
+		taskSelected.set(id);
+		detailView.buttonsEnable();
+	}
+
 	public Repository getRepo() {
 		return repo;
 	}
-
 }

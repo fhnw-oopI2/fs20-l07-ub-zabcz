@@ -59,7 +59,6 @@ final class Detail extends GridPane {
 	private final ObjectProperty<LocalDate> date;
 	private final ObjectProperty<Status> state;
 
-
 	
 	/**
 	 * Erzeugt eine neue Detailansicht.
@@ -194,8 +193,7 @@ final class Detail extends GridPane {
 		date.set(null);
 		state.set(null);
 
-		buttonNew.setDisable(true);
-		buttonDelete.setDisable(true);
+		buttonsDisable();
 	}
 
 	/**
@@ -210,8 +208,7 @@ final class Detail extends GridPane {
 		state.set(Status.Todo); // Status
 
 		// activate buttons
-		buttonNew.setDisable(false);
-		buttonDelete.setDisable(false);
+		buttonsEnable();
 	}
 
 	/**
@@ -222,5 +219,15 @@ final class Detail extends GridPane {
 			gui.deleteTask(id.get());
 		}
 		cleanUp();
+	}
+
+	public void buttonsEnable(){
+		buttonNew.setDisable(false);
+		buttonDelete.setDisable(false);
+	}
+
+	public void buttonsDisable(){
+		buttonNew.setDisable(true);
+		buttonDelete.setDisable(true);
 	}
 }
