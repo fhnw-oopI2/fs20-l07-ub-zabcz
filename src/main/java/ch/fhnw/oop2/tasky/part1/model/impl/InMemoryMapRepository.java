@@ -53,11 +53,4 @@ public class InMemoryMapRepository implements Repository {
 		allTasks.remove(id);
 	}
 
-	@Override
-	public Task getTaskById(long id) {
-		if(!allTasks.containsKey(id)) {
-			throw new IllegalStateException("Lookup - keine Task mit dieser ID: " + id);
-		}
-		return allTasks.get(id);
-	}
 }

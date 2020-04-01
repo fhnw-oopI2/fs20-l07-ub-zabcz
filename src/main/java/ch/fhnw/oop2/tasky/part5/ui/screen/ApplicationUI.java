@@ -63,8 +63,15 @@ public final class ApplicationUI extends GridPane {
 	 * Anzeigen aller Tasks, eingeordnet in die Lanes
 	 */
 	private void refreshTaskLanes() {
+		// remove laneGroup from gridpane to prevent dead task regions
+		getChildren().remove(laneGroup);
+
 		// create private list of all tasks from repo
 		List<Task> all_tasks = repo.read();
+
+		for (Task t : all_tasks) {
+			System.out.println(t.toString());
+		}
 
 		// create lists for each state
 		List<Task> todo_tasks = Task.reduceList(all_tasks, Status.Todo);
@@ -89,7 +96,9 @@ public final class ApplicationUI extends GridPane {
 
 	}
 
-
+	/**
+	 * creates layout
+	 */
 	private void layoutControls() {
 		ConstraintHelper.setRowPercentConstraint(this, 100); // Höhe soll generell voll ausgefüllt werden.
 		
@@ -101,6 +110,12 @@ public final class ApplicationUI extends GridPane {
 		add(detailView, 1, 0);
 	}
 
+	/**
+	 * creates region for every task with color
+	 * @param color Color as Hex-String
+	 * @param tasks List von Tasks
+	 * @return  Liste von neuen Regions
+	 */
 	private List<Region> createRegionsForTasks(List<Task> tasks, String color) {
 		List<Region> tasks_as_region = new ArrayList<>();
 
@@ -115,6 +130,10 @@ public final class ApplicationUI extends GridPane {
 		return tasks_as_region;
 	}
 
+	/**
+	 * fired on click on Button "New"
+	 * creates new Task in repo with empty TaskData
+	 */
 	public void newTask() {
 		System.out.println(this.getClass() + "newTask()");
 		Task task = repo.create(new TaskData("", "", LocalDate.now(), Status.Todo));
@@ -125,9 +144,11 @@ public final class ApplicationUI extends GridPane {
 		detailView.setUp();
 	}
 
+	/**
+	 * refreshes all task lanes
+	 */
 	public void showTaskInDetail() {
 		refreshTaskLanes();
-		System.out.println("refresh");
 	}
 
 	/**
@@ -152,9 +173,13 @@ public final class ApplicationUI extends GridPane {
 	public void mouseClickAction(Long id) {
 		//System.out.println("mouse click fired");
 		taskSelected.set(id);
+		detailView.updateFrom(taskSelected);
 		detailView.buttonsEnable();
 	}
 
+	/**
+	 * Getter: repo
+	 */
 	public Repository getRepo() {
 		return repo;
 	}

@@ -82,7 +82,7 @@ final class Detail extends GridPane {
 		id.addListener(new ChangeListener(){
 			// if id changes, lookup other fileds
 			@Override public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-				Task temp = gui.getRepo().getTaskById(id.get());
+				Task temp = gui.getRepo().read(id.get());
 				title.set(temp.data.title);
 				desc.set(temp.data.desc);
 				date.set(temp.data.dueDate);
@@ -123,8 +123,7 @@ final class Detail extends GridPane {
 
 		buttonNew.setOnAction(event -> saveTask());
 		buttonDelete.setOnAction(event -> deleteTask());
-		buttonNew.setDisable(true);
-		buttonDelete.setDisable(true);
+		buttonsDisable();
 	}
 
 	/**
@@ -229,5 +228,13 @@ final class Detail extends GridPane {
 	public void buttonsDisable(){
 		buttonNew.setDisable(true);
 		buttonDelete.setDisable(true);
+	}
+
+	public void updateFrom(LongProperty id){
+		Task temp = gui.getRepo().read(id.get());
+		title.set(temp.data.title);
+		desc.set(temp.data.desc);
+		date.set(temp.data.dueDate);
+		state.set(temp.data.state);
 	}
 }
