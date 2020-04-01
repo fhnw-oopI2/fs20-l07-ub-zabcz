@@ -24,6 +24,8 @@ public final class ApplicationUI extends GridPane {
 	
 	private static final int TASKLANE_PERCENT = 60;
 	private static final int DETAILS_PERCENT = 40;
+	private static final int MIN_DUMMY_TASKS = 1;
+	private static final int MAX_DUMMY_TASKS = 4;
 	public final static String[] COLORS = { "#2ecc71", "#3498db", "#e74c3c", "#9b59b6" };
 
 	private Lane todo;
@@ -44,8 +46,7 @@ public final class ApplicationUI extends GridPane {
 	public ApplicationUI() {
 		repo = new InMemoryMapRepository();
 		detailView = new Detail(this);
-		repo.create(new TaskData("Task01", "erster Task von Tasky v5.0", LocalDate.now(), Status.Todo));
-		repo.create(new TaskData("Task02", "zweiter Task von Tasky v5.0", LocalDate.now(), Status.Todo));
+		initDummyTasks();
 		// init property
 		taskSelected = new SimpleLongProperty();
 		// sync property of task id
@@ -53,6 +54,18 @@ public final class ApplicationUI extends GridPane {
 
 		initializeControls();
 		layoutControls();
+	}
+
+	private void initDummyTasks() {
+		int counter=1;
+		for(Status status : Status.getAllStati()){
+			int randomNum = MIN_DUMMY_TASKS + (int)(Math.random()*MAX_DUMMY_TASKS);
+			for (int i = 0; i < randomNum; i++) {
+				repo.create(new TaskData("Task0"+counter, "Task von Tasky v5.0", LocalDate.now(), status));
+				counter++;
+			}
+		}
+
 	}
 
 	private void initializeControls() {
