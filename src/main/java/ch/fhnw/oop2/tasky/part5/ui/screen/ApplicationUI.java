@@ -42,9 +42,13 @@ public final class ApplicationUI extends GridPane {
 	 */
 	public ApplicationUI() {
 		repo = new InMemoryMapRepository();
+		detailView = new Detail(this);
 		repo.create(new TaskData("Task01", "erster Task von Tasky v5.0", LocalDate.now(), Status.Todo));
 		repo.create(new TaskData("Task02", "zweiter Task von Tasky v5.0", LocalDate.now(), Status.Todo));
+		// init property
 		taskSelected = new SimpleLongProperty();
+		// sync property of task id
+		taskSelected.bindBidirectional(detailView.getTaskIdProperty());
 
 		initializeControls();
 		layoutControls();
@@ -79,8 +83,6 @@ public final class ApplicationUI extends GridPane {
 		done = new Lane (Status.Done.name(), done_regions);
 		review = new Lane (Status.Review.name(), review_regions);
 
-
-
 		laneGroup = new LaneGroup(this, todo, doing, done, review);
 		add(laneGroup, 0, 0);
 
@@ -95,11 +97,7 @@ public final class ApplicationUI extends GridPane {
 		
 		ConstraintHelper.setColumnPercentConstraint(this, DETAILS_PERCENT);
 
-		detailView = new Detail(this);
 		add(detailView, 1, 0);
-
-		// Sync property of task id
-		taskSelected.bindBidirectional(detailView.getTaskIdProperty());
 	}
 
 	private List<Region> createRegionsForTasks(List<Task> tasks, String color) {
@@ -110,7 +108,7 @@ public final class ApplicationUI extends GridPane {
 			Region region = Task.createRegionWithText(color, t.data.title);
 			// create click handler on every region
 			System.out.println("onMouseClick: set id");
-			region.onMouseClickedProperty().set(event -> System.out.println("test") );//taskSelected.set(t.id));
+			region.onMouseClickedProperty().set(event -> taskSelected.set(t.id)); //taskSelected.set(t.id));
 			// add region to list of regions
 			tasks_as_region.add(region);
 		}
